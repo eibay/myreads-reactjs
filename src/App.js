@@ -12,9 +12,12 @@ class BooksApp extends Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
 
+    books: []
 
     showSearchPage: false
   }
+
+  
 
   render() {
     return (

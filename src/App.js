@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
-import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
-import Bookshelf from './Bookshelf'
-
 import './App.css'
 
 class BooksApp extends Component {
@@ -13,18 +10,9 @@ class BooksApp extends Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-
-    books: [],
-
     showSearchPage: false
   }
 
-  componentDidMount(){
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
-      console.log(books)
-    })
-  }
 
   render() {
     return (
@@ -33,7 +21,7 @@ class BooksApp extends Component {
           <div className="search-books">
             <div className="search-books-bar">
               <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
+            <div className="search-books-input-wrapper">
                 {/*
                   NOTES: The search from BooksAPI is limited to a particular set of search terms.
                   You can find these search terms here:
@@ -47,20 +35,15 @@ class BooksApp extends Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid">
-                <li>
-                  <Bookshelf
-                    books={this.state.books}
-                    shelfTitle="Search Results"
-                  />
-                </li>
-              </ol>
+              <ListBooks
+                setListTitle="Search Results"
+              />
             </div>
           </div>
         ) : (
           <div>
             <div>
-              <ListBooks />
+              <ListBooks setListTitle="MyReads" />
             </div>
             <div className="open-search">
               <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>

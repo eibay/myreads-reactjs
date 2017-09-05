@@ -1,27 +1,37 @@
 import React, { Component } from 'react'
+import escapeRegExp from 'escape-string-regexp'
 import PropTypes from 'prop-types'
 import Bookshelf from './Bookshelf'
-import * as BooksAPI from './BooksAPI'
 
 
 class ListBooks extends Component{
   static propTypes = {
-    setListTitle: PropTypes.string
+    books: PropTypes.array.isRequired,
+    setListTitle: PropTypes.string,
+    shelfCategory: PropTypes.string.isRequired,
+    shelf: PropTypes.string,
+    search: PropTypes.boolean
   }
 
-  state = {
-    books: [],
+  categorizeBooks(category){
+    let showingBooks
+    const match = new RegExp(escapeRegExp(category), 'i')
+    showingBooks = this.props.books.filter((book) => match.test(book.shelf))
+    return showingBooks
   }
 
-  componentDidMount(){
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
-    })
+  sortShelf(category){
+    if (this.props.search === false){
+      let shelfBooks
+      shelfBooks = this.props.books.filter((book) => book.shelf === (category))
+      return shelfBooks
+    }else{
+      return this.props.books
+    }
   }
 
   render(){
-    const { setListTitle } = this.props
-
+    const { setListTitle, shelfCategory, shelf } = this.props
     return(
       <div className="list-books">
         <div className="list-books-title">
@@ -31,7 +41,8 @@ class ListBooks extends Component{
           <div>
             <div className="bookshelf">
               <Bookshelf
-                books={this.state.books}
+                books={this.sortShelf(shelf)}
+                shelfCategory={shelfCategory}
               />
             </div>
           </div>

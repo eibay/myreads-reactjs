@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
+import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
 import './App.css'
 
 class BooksApp extends Component {
+  static propTypes = {
+    books: PropTypes.array,
+    setListTitle: PropTypes.string
+  }
+
+
   state = {
     /**
      * TODO: Instead of using this state variable to keep track of which page
@@ -10,9 +19,16 @@ class BooksApp extends Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
+     books: [],
     showSearchPage: false
   }
 
+  componentDidMount(){
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books })
+      // console.log(books) //this works for checking
+    })
+  }
 
   render() {
     return (
@@ -36,14 +52,39 @@ class BooksApp extends Component {
             </div>
             <div className="search-books-results">
               <ListBooks
-                setListTitle="Search Results"
+                setListTitle="MyReads"
+                shelfCategory="Search Results"
+                books={this.state.books}
+                search={true}
               />
             </div>
           </div>
         ) : (
           <div>
             <div>
-              <ListBooks setListTitle="MyReads" />
+              <ListBooks
+                setListTitle="MyReads"
+                shelfCategory="Currently Reading"
+                books={this.state.books}
+                shelf="currentlyReading"
+                search={false}
+              />
+            </div>
+            <div>
+              <ListBooks
+                shelfCategory="Want To Read"
+                books={this.state.books}
+                shelf="wantToRead"
+                search={false}
+              />
+            </div>
+            <div>
+              <ListBooks
+                shelfCategory="Read"
+                books={this.state.books}
+                shelf="read"
+                search={false}
+              />
             </div>
             <div className="open-search">
               <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>

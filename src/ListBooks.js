@@ -7,7 +7,9 @@ class ListBooks extends Component{
   static propTypes = {
     books: PropTypes.array.isRequired,
     shelfCategory: PropTypes.string.isRequired,
-    shelf: PropTypes.string
+    shelf: PropTypes.string,
+    onTransferShelf: PropTypes.func,
+    search: PropTypes.bool
   }
 
   sortShelf(category){
@@ -19,7 +21,7 @@ class ListBooks extends Component{
       return this.props.books
     }
   }
-//TODO: Sample search code only, not hook up yet.
+// TODO: Sample search code only, not hook up yet.
   searchBooks(category){
     let showingBooks
     const match = new RegExp(escapeRegExp(category), 'i')
@@ -28,14 +30,14 @@ class ListBooks extends Component{
   }
 
   render(){
-    const { shelfCategory, shelf } = this.props
+    const { shelfCategory, shelf, onTransferShelf } = this.props
 
     return(
       <div className="bookshelf">
         <Bookshelf
           books={this.sortShelf(shelf)}
           shelfCategory={shelfCategory}
-          shelf={shelf}
+          onTransferShelf={onTransferShelf}
         />
       </div>
     )

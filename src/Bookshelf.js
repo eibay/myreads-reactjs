@@ -8,11 +8,12 @@ class Bookshelf extends Component {
 
   static propTypes = {
     books: PropTypes.array.isRequired,
-    shelfCategory: PropTypes.string.isRequired
+    shelfCategory: PropTypes.string.isRequired,
+    onTransferShelf: PropTypes.func
   }
 
   render(){
-    const { books, shelfCategory } = this.props
+    const { books, shelfCategory, onTransferShelf } = this.props
     // console.log(books)
 
     return(
@@ -25,7 +26,11 @@ class Bookshelf extends Component {
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
                     <div className="book-shelf-changer">
-                      <ShelfChanger />
+                      <ShelfChanger 
+                          onTransferShelf={onTransferShelf} 
+                          book={book}
+                          shelf={book.shelf}
+                      />
                     </div>
                   </div>
                   <div className="book-title">{book.title}</div>

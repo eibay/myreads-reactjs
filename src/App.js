@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import update from 'immutability-helper';
 
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
@@ -22,15 +23,28 @@ class BooksApp extends Component {
   }
 
   componentDidMount(){
+    this.fetchBooks()
+  }
+
+  fetchBooks = () => {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
-      console.log(books) //this works for checking
     })
+  }
+
+  transferShelf = (book, shelf) => {
+    const myBooks = this.state.books
+    const modifiedBook = update(book, {shelf: {$set: (book.shelf = shelf)}} )
+    const newBooks = update(myBooks, {$apply: function(){return modifiedBook }})
+    this.setState(state => {
+      books: newBooks
+    })
+    BooksAPI.update(modifiedBook, shelf)
+    console.log(shelf)
   }
 
   render() {
     const { listTitles, shelves, showSearchPage, books, search } = this.state
-
     return (
       <div className="app">
         {showSearchPage ? (
@@ -57,11 +71,14 @@ class BooksApp extends Component {
                   <h1>{listTitles[1]}</h1>
                 </div>
                 <div className="list-books-content">
-                  <ListBooks
-                    shelfCategory="Search Results"
-                    books={books}
-                    search={true}
-                  />
+                  <div>
+                    <ListBooks
+                      shelfCategory={"Search Results"}
+                      books={books}
+                      search={true}
+                      onTransferShelf={this.transferShelf}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -80,7 +97,8 @@ class BooksApp extends Component {
                       books={books}
                       shelf={shelf.slug}
                       search={shelf.search}
-                      />
+                      onTransferShelf={this.transferShelf}
+                    />
                   </div>
                 )}
               </div>
@@ -88,6 +106,7 @@ class BooksApp extends Component {
             <div className="open-search">
               <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
             </div>
+
           </div>
         )}
       </div>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
 import ShelfChanger from './ShelfChanger'
 
 
@@ -14,7 +13,7 @@ class Bookshelf extends Component {
 
   render(){
     const { books, shelfCategory, onTransferShelf } = this.props
-    // console.log(books)
+    
 
     return(
       <div>
@@ -34,7 +33,9 @@ class Bookshelf extends Component {
                     </div>
                   </div>
                   <div className="book-title">{book.title}</div>
-                  <div className="book-authors">{book.authors}</div>
+                  {book.authors.map(author => (
+                    <div className="book-authors">{author}</div>
+                  ))}
                 </div>
             </li>
           ))}

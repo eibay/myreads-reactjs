@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import escapeRegExp from 'escape-string-regexp'
 import PropTypes from 'prop-types'
+import sortBy from 'sort-by'
 import Bookshelf from './Bookshelf'
+
 
 class ListBooks extends Component{
   static propTypes = {
@@ -12,30 +13,28 @@ class ListBooks extends Component{
     search: PropTypes.bool
   }
 
-  sortShelf(category){
-    if (this.props.search === false){
+  sortShelf = (shelf)=> {
       let shelfBooks
-      shelfBooks = this.props.books.filter((book) => book.shelf === (category))
+      shelfBooks = this.props.books.filter((book) => book.shelf === (shelf))
       return shelfBooks
-    }else{
-      return this.props.books
-    }
-  }
-// TODO: Sample search code only, not hook up yet.
-  searchBooks(category){
-    let showingBooks
-    const match = new RegExp(escapeRegExp(category), 'i')
-    showingBooks = this.props.books.filter((book) => match.test(book.shelf))
-    return showingBooks
   }
 
   render(){
-    const { shelfCategory, shelf, onTransferShelf } = this.props
+    const { books, shelfCategory, shelf, onTransferShelf, search } = this.props
+
+    let showBooks
+    if (search === false){
+      showBooks = this.sortShelf(shelf)
+    }else{
+      showBooks = books
+    }
+
+    showBooks.sort(sortBy('title'))
 
     return(
       <div className="bookshelf">
         <Bookshelf
-          books={this.sortShelf(shelf)}
+          books={showBooks}
           shelfCategory={shelfCategory}
           onTransferShelf={onTransferShelf}
         />
